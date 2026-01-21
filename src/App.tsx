@@ -1,5 +1,6 @@
 import UserCard from "./UserCard";
-import AiAssistant from "./aiAssistant";
+import AiAssistant from "./AIAssistant";
+import BeehiveCheck from "./BeehiveCheck";
 import "./App.css";
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
         <UserCard name="Yurii" method={1} />
         <UserCard name="AI Bot" method={0} />
         <AiAssistant />
+        <BeehiveCheck />
       </div>
     </>
   );
