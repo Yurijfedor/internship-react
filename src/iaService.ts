@@ -43,7 +43,6 @@ export async function askAIJSON(
   });
 
   const data = await response.json();
-  console.log(data);
   // AI повертає текст → перетворюємо на JSON
   return JSON.parse(data.choices[0].message.content);
 }

@@ -1,12 +1,7 @@
 import { useState } from "react";
 import { askAIJSON } from "./iaService";
-
-interface HiveData {
-  hiveNumber: number;
-  strength: number;
-  queenStatus: string;
-  honey: number;
-}
+import type { HiveData } from "./utils/types/hive";
+import { isHiveData, isHiveDataValid } from "./utils/validators/hiveValidator";
 
 function BeehiveCheck() {
   const [hiveNumber, setHiveNumber] = useState("");
@@ -17,7 +12,12 @@ function BeehiveCheck() {
     setLoading(true);
     const prompt = `Create JSON for a beehive check. Fields: hiveNumber (number), strength (1-5), queenStatus (good/medium/bad), honey (kg). Use hiveNumber ${hiveNumber}.  Provide only JSON.`;
     const result = await askAIJSON(prompt);
-    setData(result as unknown as HiveData);
+
+    if (isHiveData(result) && isHiveDataValid(result)) {
+      setData(result);
+    } else {
+      console.error("Invalid hive data received from AI");
+    }
     setLoading(false);
   }
 
