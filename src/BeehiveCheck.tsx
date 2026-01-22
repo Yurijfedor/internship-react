@@ -15,7 +15,7 @@ function BeehiveCheck() {
 
   async function handleCheck() {
     setLoading(true);
-    const prompt = `Create JSON for a beehive check. Fields: hiveNumber (number), strength (1-5), queenStatus (good/medium/bad), honey (kg). Use hiveNumber ${hiveNumber}. Provide only JSON.`;
+    const prompt = `Create JSON for a beehive check. Fields: hiveNumber (number), strength (1-5), queenStatus (good/medium/bad), honey (kg). Use hiveNumber ${hiveNumber}.  Provide only JSON.`;
     const result = await askAIJSON(prompt);
     setData(result as unknown as HiveData);
     setLoading(false);

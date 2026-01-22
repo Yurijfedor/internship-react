@@ -20,7 +20,9 @@ export async function askAi(prompt: string): Promise<string> {
   return data.choices[0].message.content;
 }
 
-export async function askAIJSON(prompt: string): Promise<Record<string, unknown>> {
+export async function askAIJSON(
+  prompt: string,
+): Promise<Record<string, unknown>> {
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: {
@@ -32,7 +34,8 @@ export async function askAIJSON(prompt: string): Promise<Record<string, unknown>
       messages: [
         {
           role: "system",
-          content: "You are a helpful assistant that returns only JSON.",
+          content:
+            "You are a helpful assistant that returns only JSON. No markdown. No explanations. ",
         },
         { role: "user", content: prompt },
       ],
@@ -40,6 +43,7 @@ export async function askAIJSON(prompt: string): Promise<Record<string, unknown>
   });
 
   const data = await response.json();
+  console.log(data);
   // AI повертає текст → перетворюємо на JSON
   return JSON.parse(data.choices[0].message.content);
 }
