@@ -23,7 +23,7 @@ function AiAssistant() {
       await fakeStream(
         JSON.stringify(result, null, 2),
         (chunk) => setOutput((prev) => prev + chunk),
-        () => cancelled,
+        { cancelled: () => cancelled },
       );
 
       setStatus("done");
