@@ -27,19 +27,38 @@ export function askAiStream(
     }),
   })
     .then(async (res) => {
-      const reader = res.body?.getReader();
-      if (!reader) throw new Error("No stream");
-
+      if (!res.body) throw new Error("Response body is null");
+      const reader = res.body.getReader();
       const decoder = new TextDecoder();
+      let buffer = "";
 
       while (true) {
         const { value, done } = await reader.read();
         if (done) break;
 
-        handlers.onChunk(decoder.decode(value));
-      }
+        buffer += decoder.decode(value, { stream: true });
 
-      handlers.onDone?.();
+        const events = buffer.split("\n\n");
+        buffer = events.pop() || ""; // залишок на наступний chunk
+
+        for (const event of events) {
+          if (!event.startsWith("data:")) continue;
+
+          const data = event.replace("data:", "").trim();
+
+          if (data === "[DONE]") {
+            handlers.onDone?.();
+            return;
+          }
+
+          const json = JSON.parse(data);
+          const content = json.choices?.[0]?.delta?.content;
+
+          if (content) {
+            handlers.onChunk(content);
+          }
+        }
+      }
     })
     .catch((err) => {
       if (err.name !== "AbortError") {
