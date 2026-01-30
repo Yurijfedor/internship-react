@@ -19,6 +19,7 @@ export function parseOpenAIStreamResponse(
     buffer += decoder.decode(chunk, { stream: true });
     const lines = buffer.split("\n");
     buffer = lines.pop() || "";
+
     for (const line of lines) {
       if (!line.startsWith("data: ")) continue;
       const dataLine = line.slice(6).trim();
@@ -28,17 +29,26 @@ export function parseOpenAIStreamResponse(
         cancel();
         return;
       }
+
       try {
         const parsed = JSON.parse(dataLine);
-        const delta = parsed?.choices?.[0]?.delta?.content;
-        if (typeof delta === "string") {
-          handlers.onChunk(delta);
+        // ✅ Responses API streaming
+        if (parsed.type === "response.output_text.delta") {
+          const delta = parsed.delta;
+          if (typeof delta === "string") {
+            handlers.onChunk(delta);
+          }
+        } else if (parsed.type === "response.completed") {
+          handlers.onDone?.();
+          cancel();
+          return;
         }
       } catch (e) {
         handlers.onError?.(e);
       }
     }
   };
+
   const readLoop = async () => {
     try {
       while (!cancelled) {

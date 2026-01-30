@@ -15,14 +15,16 @@ export function askAiStream(
 
   fetch(backendUrl, {
     method: "POST",
-    // headers: {
-    //   "Content-Type": "application/json",
-    // },
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify({ input: prompt }),
     signal: controller.signal,
   })
     .then(async (res) => {
       if (!res.body) throw new Error("Response body is null");
+      console.log(res.body);
+
       await parseOpenAIStreamResponse(res.body, handlers);
     })
     .catch((err) => {
