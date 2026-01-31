@@ -30,8 +30,6 @@ function AiAssistant() {
     setStatus("idle");
   }
 
-  console.log(output);
-
   return (
     <div>
       <h2>AI Assistant</h2>

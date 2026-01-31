@@ -23,7 +23,6 @@ export function askAiStream(
   })
     .then(async (res) => {
       if (!res.body) throw new Error("Response body is null");
-      console.log(res.body);
 
       await parseOpenAIStreamResponse(res.body, handlers);
     })
