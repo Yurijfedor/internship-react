@@ -132,3 +132,13 @@ This guarantees the UI always reaches a final consistent state.
 - production-oriented API design
 
 It can be safely reused or extended when moving streaming logic to a backend service.
+
+## Links
+
+Live Demo:
+https://aiassistant-frontend-eight.vercel.app
+
+Backend API:
+https://aiassistant-backend-production.up.railway.app
+
+This project demonstrates secure AI streaming architecture using OpenAI Responses API and SSE.
