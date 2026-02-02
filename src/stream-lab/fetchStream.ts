@@ -1,5 +1,5 @@
 export async function runFetchStream() {
-  const res = await fetch("/api/stream-lab");
+  const res = await fetch("http://localhost:3001/api/stream-lab");
 
   if (!res.body) {
     throw new Error("No response body");
@@ -17,7 +17,7 @@ export async function runFetchStream() {
 
     if (done) break;
 
-    const text = decoder.decode(value, { stream: true });
+    const text = decoder.decode(value, { stream: false });
     console.log("decoded:", JSON.stringify(text));
   }
 
