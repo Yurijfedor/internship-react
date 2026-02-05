@@ -2,9 +2,6 @@ import { useRef, useState } from "react";
 import { askAiStream } from "../api/openai/stream";
 import type { AIStatus } from "../api/openai/types";
 import type { StreamController } from "../api/openai/types";
-import { runFetchStream } from "../stream-lab/fetchStream";
-import { runSseStream } from "../stream-lab/sseStream";
-import { exploreEventLoop } from "../stream-lab/eventLoopStream";
 
 function AiAssistant() {
   const [question, setQuestion] = useState("");
@@ -22,6 +19,7 @@ function AiAssistant() {
         setOutput((prev) => prev + chunk);
       },
       onDone: () => {
+        console.log("✅ STREAM DONE");
         setStatus("done");
       },
       onError: () => setStatus("error"),
@@ -36,45 +34,31 @@ function AiAssistant() {
   }
 
   return (
-    <>
-      <div>
-        <h2>AI Assistant</h2>
-        <input
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-          placeholder="Ask something ..."
-        />
-        <button onClick={handleAsk} disabled={status === "streaming"}>
-          Ask AI
+    <div>
+      <h2>AI Assistant</h2>
+      <input
+        value={question}
+        onChange={(e) => setQuestion(e.target.value)}
+        placeholder="Ask something ..."
+      />
+      <button onClick={handleAsk} disabled={status === "streaming"}>
+        Ask AI
+      </button>
+      {status === "streaming" && (
+        <button onClick={handleCancel} disabled={status !== "streaming"}>
+          Cancel
         </button>
-        {status === "streaming" && (
-          <button onClick={handleCancel} disabled={status !== "streaming"}>
-            Cancel
-          </button>
-        )}
-        {status === "streaming" && <p>🧠 AI is thinking...</p>}
-        {status === "streaming" && <pre>{output}</pre>}
-        {status === "done" && (
-          <div>
-            ✅ Done: <br />
-            {output !== "" ? <p>{output}</p> : "<empty request>"}
-          </div>
-        )}
-        {status === "error" && <p style={{ color: "red" }}>❌ Error</p>}
-      </div>
-      <div>
-        <h2>Fetch Stream Test</h2>
-        <button onClick={runFetchStream}>Run Fetch Stream</button>
-      </div>
-      <div>
-        <h2>SSE Stream Test</h2>
-        <button onClick={runSseStream}>Run SSE Stream</button>
-      </div>
-      <div>
-        <h2>Event Loop Stream Test</h2>
-        <button onClick={exploreEventLoop}>Run Event Loop Stream</button>
-      </div>
-    </>
+      )}
+      {status === "streaming" && <p>🧠 AI is thinking...</p>}
+      {status === "streaming" && <pre>{output}</pre>}
+      {status === "done" && (
+        <p>
+          ✅ Done: <br />
+          {output}
+        </p>
+      )}
+      {status === "error" && <p style={{ color: "red" }}>❌ Error</p>}
+    </div>
   );
 }
 export default AiAssistant;
