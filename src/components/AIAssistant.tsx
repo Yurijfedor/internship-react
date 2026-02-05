@@ -4,6 +4,7 @@ import type { AIStatus } from "../api/openai/types";
 import type { StreamController } from "../api/openai/types";
 import { runFetchStream } from "../stream-lab/fetchStream";
 import { runSseStream } from "../stream-lab/sseStream";
+import { exploreEventLoop } from "../stream-lab/eventLoopStream";
 
 function AiAssistant() {
   const [question, setQuestion] = useState("");
@@ -68,6 +69,10 @@ function AiAssistant() {
       <div>
         <h2>SSE Stream Test</h2>
         <button onClick={runSseStream}>Run SSE Stream</button>
+      </div>
+      <div>
+        <h2>Event Loop Stream Test</h2>
+        <button onClick={exploreEventLoop}>Run Event Loop Stream</button>
       </div>
     </>
   );
